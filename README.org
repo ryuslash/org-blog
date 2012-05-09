@@ -1,0 +1,4 @@
+* Intro
+
+  I found this elisp file [[http://www.emacswiki.org/emacs/org-blog.el][here]], but it seemed somewhat
+  out-of-date. I'm trying to fix that.
