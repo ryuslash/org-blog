@@ -1,10 +1,10 @@
-;;; org-blog2.el --- create and publish a blog with org-mode
+;;; org-blog.el --- create and publish a blog with org-mode
 
 ;; Copyright (C) 2006  David O'Toole
 
 ;; Author: David O'Toole <dto@gnu.org>
 ;; Keywords: hypermedia, tools
-;; $Id: org-blog2.el,v 1.18 2007/06/13 16:21:24 dto Exp dto $
+;; $Id: org-blog.el,v 1.18 2007/06/13 16:21:24 dto Exp dto $
 
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@
 
 ;;;; 1. Basic configuration
 ;;
-;;    First add (require 'org-blog2) to your emacs initialization file.
+;;    First add (require 'org-blog) to your emacs initialization file.
 ;;
 ;;    Then set the variable org-blog-directory (you can also leave it
 ;;    as the default, "~/blog/"). This directory should be different
@@ -125,22 +125,22 @@
 
 (require 'org-publish)
 
-(defgroup org-blog2 nil
+(defgroup org-blog nil
   "Options for keeping and publishing a blog with org-mode."
   :tag "Org Blog"
   :group 'org-publish)
 
 (defcustom org-blog-directory "~/blog/"
   "Directory where finished blog posts are stored."
-  :group 'org-blog2)
+  :group 'org-blog)
 
 (defcustom org-blog-unfinished-directory "~/blog/unfinished"
   "Directory where unfinished posts are stored."
-  :group 'org-blog2)
+  :group 'org-blog)
 
 (defcustom org-blog-time-format "%Y-%m-%d %I:%M%p -- "
   "Format string used when timestamping posts."
-  :group 'org-blog2)
+  :group 'org-blog)
 
 (defun org-blog-new-post-file ()
   (concat (file-name-as-directory org-blog-directory)
@@ -323,5 +323,5 @@ of org-publish-project-alist."
  <guid isPermaLink=\"true\">%s</guid>
  </item>\n" title description-html pubdate permalink)))
 
-(provide 'org-blog2)
-;;; org-blog2.el ends here
+(provide 'org-blog)
+;;; org-blog.el ends here
