@@ -185,7 +185,7 @@ of org-publish-project-alist."
          (base-directory (file-name-as-directory
                           (or (plist-get ext-plist :base-directory)
                               org-blog-directory)))
-         (blog-base-url base-directory)
+         (blog-base-url (plist-get ext-plist :blog-url))
          (blog-title (plist-get ext-plist :blog-title))
          (publishing-directory (file-name-as-directory
                                 (plist-get ext-plist
