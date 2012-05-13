@@ -170,10 +170,10 @@ Follow up with org-publish-all to upload to the site."
   (interactive)
   (write-file (org-blog-new-post-file)))
 
-(defun org-publish-org-to-blog (plist filename pub-dir)
+(defun org-publish-org-to-blog (project-plist filename pub-dir)
   (org-publish-with-aux-preprocess-maybe
-   (org-publish-org-to "blog" plist filename pub-dir)
-   (org-publish-org-to "html" plist filename pub-dir)))
+   (org-publish-org-to "blog" project-plist filename pub-dir)
+   (org-publish-org-to "html" project-plist filename pub-dir)))
 
 (defun org-export-as-blog (arg &optional hidden ext-plist to-buffer
                                body-only pub-dir)
