@@ -143,14 +143,16 @@
   :group 'org-blog2)
 
 (defun org-blog-new-post-file ()
-  (concat (file-name-as-directory org-blog-directory) (format-time-string "blog-%Y-%m-%d-%H%M.org")))
+  (concat (file-name-as-directory org-blog-directory)
+          (format-time-string "blog-%Y-%m-%d-%H%M.org")))
 
 (defun org-blog-new-post (filename)
   "Create a new post in FILENAME.
 Post is stored in `org-blog-unfinished-directory'."
   (interactive "sFilename for new post: ")
-  (find-file (concat (file-name-as-directory org-blog-unfinished-directory)
-		     filename ".org"))
+  (find-file (concat
+              (file-name-as-directory org-blog-unfinished-directory)
+              filename ".org"))
   (insert "#+TITLE: \n")
   (insert "#+DESCRIPTION: "))
 
@@ -178,12 +180,16 @@ Follow up with org-publish-all to upload to the site."
   "Publish an index of all finished blog posts.
 This function is suitable for use in the :index-function keyword
 of org-publish-project-alist."
-  (let* ((posts (nreverse (sort (org-publish-get-base-files `("" . ,ext-plist) "*~") 'string<)))
-         (base-directory (file-name-as-directory (or (plist-get ext-plist :base-directory) org-blog-directory)))
+  (let* ((posts (nreverse (sort (org-publish-get-base-files
+                                 `("" . ,ext-plist) "*~") 'string<)))
+         (base-directory (file-name-as-directory
+                          (or (plist-get ext-plist :base-directory)
+                              org-blog-directory)))
          (blog-base-url base-directory)
          (blog-title (plist-get ext-plist :blog-title))
          (publishing-directory (file-name-as-directory
-                                (plist-get ext-plist :publishing-directory)))
+                                (plist-get ext-plist
+                                           :publishing-directory)))
          (blog-description (plist-get ext-plist :blog-description))
          (blog-rss-feed nil)
          (rss (plist-get ext-plist :blog-export-rss))
@@ -196,121 +202,119 @@ of org-publish-project-alist."
          (p nil))
 
     ;;
-    ;; if buffer is already open, kill it
-    ;; (if index-buffer
-    ;;     (kill-buffer index-buffer))
-    ;;
     ;; start the RSS feed
     (when rss
-      (push (org-blog-rss-preamble blog-title blog-base-url blog-description)
+      (push (org-blog-rss-preamble blog-title blog-base-url
+                                   blog-description)
             blog-rss-feed))
     ;;
     (with-temp-buffer
       ;;
       ;; process each post
       (while (setq p (pop posts))
-	(let ((basename (file-name-nondirectory p))
-	      (post-title nil)
-	      (post-time (format-time-string
-			  "%a, %d %b %Y %H:%M:00 %z"
-			  (nth 5 (file-attributes p))))
-	      (post-description nil))
-	  ;;
-	  ;; grab post details
-	  (with-temp-buffer
-	    (insert-file-contents p)
-	    ;;
-	    ;; make sure we are in org-mode (otherwise export won't work properly)
-	    (let ((org-inhibit-startup t)) (org-mode))
-	    (goto-char (point-min))
-	    (re-search-forward "#\\+TITLE: \\(.*\\)$" nil t)
-	    (setf post-title (match-string 1))
-	    (re-search-forward "#\\+DESCRIPTION: \\(.*\\)$" nil t)
-	    (setf post-description (match-string 1))
-	    (setf post-content (buffer-substring-no-properties
-				(match-end 1) (point-max))))
-	  ;;
-	  ;; avoid inserting existing index; this would be a loop!
-	  (when (not (string= basename "index.org"))
-	    ;;
-	    ;; add rss item
-	    (when rss
-	      (push (org-blog-rss-item post-title
-				       (concat blog-base-url
-					       (file-name-sans-extension
-						(file-name-nondirectory p))
-					       ".html")
-				       post-content
-				       post-time)
-		    blog-rss-feed))
-	    (if (< count num-posts)
-		;;
-		;; insert full text of post
-		(progn (insert-file-contents p)
-		       ;; permalink
-		       (goto-char (point-max))
-		       (insert (with-temp-buffer
-				 (insert (concat "\n\n [[file:" basename "][Permalink]]\n\n"))
-				 (buffer-substring-no-properties (point-min) (point-max)))))
+        (let ((basename (file-name-nondirectory p))
+              (post-title nil)
+              (post-time (format-time-string
+                          "%a, %d %b %Y %H:%M:00 %z"
+                          (nth 5 (file-attributes p))))
+              (post-description nil))
+          ;;
+          ;; grab post details
+          (with-temp-buffer
+            (insert-file-contents p)
+            ;;
+            ;; make sure we are in org-mode (otherwise export won't
+            ;; work properly)
+            (let ((org-inhibit-startup t)) (org-mode))
+            (goto-char (point-min))
+            (re-search-forward "#\\+TITLE: \\(.*\\)$" nil t)
+            (setf post-title (match-string 1))
+            (re-search-forward "#\\+DESCRIPTION: \\(.*\\)$" nil t)
+            (setf post-description (match-string 1))
+            (setf post-content (buffer-substring-no-properties
+                                (match-end 1) (point-max))))
+          ;;
+          ;; avoid inserting existing index; this would be a loop!
+          (when (not (string= basename "index.org"))
+            ;;
+            ;; add rss item
+            (when rss
+              (push
+               (org-blog-rss-item post-title
+                                  (concat blog-base-url
+                                          (file-name-sans-extension
+                                           (file-name-nondirectory p))
+                                          ".html")
+                                  post-content
+                                  post-time)
+               blog-rss-feed))
+            (if (< count num-posts)
+                ;;
+                ;; insert full text of post
+                (progn (insert-file-contents p)
+                       ;; permalink
+                       (goto-char (point-max))
+                       (insert (with-temp-buffer
+                                 (insert (concat "\n\n [[file:"
+                                                 basename
+                                                 "][Permalink]]\n\n"))
+                                 (buffer-substring-no-properties
+                                  (point-min) (point-max)))))
 
-	      ;;
-	      ;; or, just insert link with title
-	      (progn
-		(goto-char (point-max))
-		(when (= count num-posts)
-		  (insert "\n** Older posts\n"))
-		(insert (concat " - [[file:"
-				basename "]["
-				post-title "]]\n")))))
-	  (setq count (+ 1 count))))
+              ;;
+              ;; or, just insert link with title
+              (progn
+                (goto-char (point-max))
+                (when (= count num-posts)
+                  (insert "\n** Older posts\n"))
+                (insert (concat " - [[file:"
+                                basename "]["
+                                post-title "]]\n")))))
+          (setq count (+ 1 count))))
       ;;
       ;; finish rss feed and write
       (when rss
-	(push (org-blog-rss-postamble) blog-rss-feed)
-	(with-temp-buffer
-	  (apply 'insert (nreverse blog-rss-feed))
-	  (message "%S - %S"
-		   (concat publishing-directory "blog.rss")
-		   blog-rss-feed)
+        (push (org-blog-rss-postamble) blog-rss-feed)
+        (with-temp-buffer
+          (apply 'insert (nreverse blog-rss-feed))
+          (message "%S - %S"
+                   (concat publishing-directory "blog.rss")
+                   blog-rss-feed)
 
-	  (write-file (concat publishing-directory "blog.xml"))))
+          (write-file (concat publishing-directory "blog.xml"))))
       ;;
       ;; turn pasted titles into headings
       (goto-char (point-min))
       (while (search-forward "#+TITLE: " nil t)
-	(replace-match "** " nil t))
+        (replace-match "** " nil t))
       ;;
       ;; insert index title, if any
       (when index-title
-	(goto-char (point-min))
-	(insert (concat "#+TITLE: " index-title "\n\n")))
+        (goto-char (point-min))
+        (insert (concat "#+TITLE: " index-title "\n\n")))
       (write-file index-file)
       (kill-buffer (current-buffer)))))
 
-
 ;;;; minimal RSS 2.0 support
-
-
 (defun org-blog-rss-preamble (title link description)
   (format
-"<rss version=\"2.0\">
+   "<rss version=\"2.0\">
    <channel>
       <title>%s</title>
       <link>%s</link>
       <description><![CDATA[%s]]></description>
       <generator>OrgBlog</generator>"
- title link description))
-
+   title link description))
 
 (defun org-blog-rss-postamble ()
   "</channel></rss>")
 
-
 (defun org-blog-rss-item (title permalink description pubdate)
   (let ((description-html (with-temp-buffer
-			    (insert description)
-			    (org-export-region-as-html (point-min) (point-max)
-						       :body-only 'string))))
+                            (insert description)
+                            (org-export-region-as-html
+                             (point-min) (point-max)
+                             :body-only 'string))))
     (format
      " <item>
  <title>%s</title>
@@ -318,9 +322,6 @@ of org-publish-project-alist."
  <pubDate>%s</pubDate>
  <guid isPermaLink=\"true\">%s</guid>
  </item>\n" title description-html pubdate permalink)))
-
-
-
 
 (provide 'org-blog2)
 ;;; org-blog2.el ends here
