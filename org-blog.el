@@ -7,6 +7,7 @@
 ;; Original Author: David O'Toole <dto@gnu.org>
 ;; Keywords: hypermedia, tools
 ;; Version: 1.18.1
+;; URL: https://github.com/ryuslash/org-blog
 ;;
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
