@@ -1,48 +1,52 @@
 ;;; org-blog.el --- create and publish a blog with org-mode
-
+;;
 ;; Copyright (C) 2006  David O'Toole
-
-;; Author: David O'Toole <dto@gnu.org>
+;;               2012  Tom Willemsen
+;;
+;; Maintainer: Tom Willemsen <tom@ryuslash.org>
+;; Original Author: David O'Toole <dto@gnu.org>
 ;; Keywords: hypermedia, tools
-;; $Id: org-blog.el,v 1.18 2007/06/13 16:21:24 dto Exp dto $
-
+;; Version: 1.18+1
+;;
 ;; This file is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
 ;; the Free Software Foundation; either version 2, or (at your option)
 ;; any later version.
-
+;;
 ;; This file is distributed in the hope that it will be useful,
 ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;; GNU General Public License for more details.
-
+;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs; see the file COPYING.  If not, write to
 ;; the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 ;; Boston, MA 02110-1301, USA.
 
 ;;; Commentary:
-
+;;
 ;; This program adds simple blog publishing support to org-mode. It is
 ;; built on top of org-publish.el.
-
+;;
 ;; You should read the documentation for org-publish.el before
 ;; continuing.
+;;
+;; The latest version of this program, can be found at:
+;; https://github.com/ryuslash/org-blog
 
-;; The latest version of this program, and of org-publish.el, can be
-;; found at: http://dto.freeshell.org/notebook/OrgMode.html
+;;; Usage:
 
 ;;;; 1. Basic configuration
 ;;
 ;;    First add (require 'org-blog) to your emacs initialization file.
 ;;
-;;    Then set the variable org-blog-directory (you can also leave it
-;;    as the default, "~/blog/"). This directory should be different
-;;    from the directory where your normal *.org files are stored,
-;;    otherwise they will get "posted".
+;;    Then set the variable `org-blog-directory' (you can also leave
+;;    it as the default, "~/blog/"). This directory should be
+;;    different from the directory where your normal *.org files are
+;;    stored, otherwise they will get "posted".
 ;;
 ;;    You should also set the variable
-;;    org-blog-unfinished-directory. The default is
+;;    `org-blog-unfinished-directory'. The default is
 ;;    "~/blog/unfinished". This is the directory where unfinished
 ;;    posts are stored. You can leave posts in the unfinished
 ;;    directory while you are working on them, and they won't be
@@ -53,18 +57,18 @@
 ;;    Use M-x org-blog-new-post. You'll be prompted for a
 ;;    filename. Enter a short name for this post (without the ".org")
 ;;    and press RET. You'll see a new buffer with a blank TITLE field.
-
+;;
 ;;    You can work on more than one post at once. They'll all be
 ;;    stored in your `org-blog-unfinished-directory'. To view a list
-;;    of posts in progress, use M-x
-;;    org-blog-find-unfinished-posts. You'll see the directory listing
-;;    of `org-blog-unfinished-directory', and you can use RET to
-;;    select a post to edit.
+;;    of posts in progress, use M-x org-blog-find-unfinished-posts.
+;;    You'll see the directory listing of
+;;    `org-blog-unfinished-directory', and you can use RET to select a
+;;    post to edit.
 
 ;;;; 3. Finish a post
 ;;
-;;    When your post is ready, visit the file and hit M-x
-;;    org-blog-finish-post. This does not mean the post is published
+;;    When your post is ready, visit the file and hit
+;;    M-x org-blog-finish-post. This does not mean the post is published
 ;;    on your website, only that the post is "finished" and given a
 ;;    timestamped filename. Your blog post and updated index will be
 ;;    published when you execute M-x org-publish-all.
@@ -74,40 +78,37 @@
 
 ;;;; 4. Configure blog publishing
 ;;
-;;    Org-blog contains an index function to publish a front page for
+;;    Org-blog contains a publish function to publish a front page for
 ;;    your blog. This index can be configured to display the most
 ;;    recent posts, and your "blogroll" or list of links to other
 ;;    blogs. The newest post will always be at the top.
 ;;
 ;;    You should add a project called "blog" to your
-;;    org-publish-project-alist. Here is an example project
+;;    `org-publish-project-alist'. Here is an example project
 ;;    configuration you can adapt to your needs:
-
+;;
 ;; '("blog" :base-directory "~/blog/"
 ;; 	    :base-extension "org"
 ;; 	    :publishing-directory "/protocol:user@host:~/html/blog/"
-;; 	    :publishing-function org-publish-org-to-html
-;; 	    :auto-index t
-;;          :blog-base-url "http://dto.freeshell.org/blog/"
+;; 	    :publishing-function org-publish-org-to-blog
+;;      :blog-url "http://dto.freeshell.org/blog/"
 ;;	    :blog-title "dto.freeshell.org blog"
 ;;	    :blog-description "David O'Toole's web log."
 ;;	    :blog-export-rss t
-;; 	    :index-function org-publish-blog-index
-;; 	    :index-filename "index.org"
 ;; 	    :index-title "Title of my Blog"
 ;; 	    :index-posts 2
-;;          :preamble my-blogroll-html
-;;          :postamble my-footer-html)
-
+;;      :preamble my-blogroll-html
+;;      :postamble my-footer-html)
+;;
 ;;    Most of these keywords are documented along with
-;;    org-publish-project-alist. Before moving on, we'll explain
+;;    `org-publish-project-alist'. Before moving on, we'll explain
 ;;    usages specific to blogging support.
-
+;;
 ;;    The keyword :index-posts controls how many posts will be shown
 ;;    on the blog's front page. Set its value to an integer. Remaining
 ;;    posts will be shown as a list of links at the bottom of the
 ;;    page.
-
+;;
 ;;    The :index-title should be used to set the title of your blog.
 ;;    You can use the standard :preamble and :postamble keywords to
 ;;    set the header and footer of your blog posts and front page.
@@ -116,13 +117,11 @@
 
 ;;;;  5. Now publish!
 ;;
-;;    After you've updated your org-publish-project-alist and created
+;;    After you've updated your `org-publish-project-alist' and created
 ;;    a post or two, hit M-x org-publish-all. Your posts should be
 ;;    uploaded, and an index frontpage generated.
 
-
 ;;; Code:
-
 (require 'org-publish)
 
 (defgroup org-blog nil
@@ -146,6 +145,7 @@
   (concat (file-name-as-directory org-blog-directory)
           (format-time-string "blog-%Y-%m-%d-%H%M.org")))
 
+;;;###autoload
 (defun org-blog-new-post (filename)
   "Create a new post in FILENAME.
 Post is stored in `org-blog-unfinished-directory'."
