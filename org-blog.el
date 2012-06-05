@@ -151,6 +151,7 @@ Post is stored in `org-blog-unfinished-directory'."
   (insert "#+TITLE: \n")
   (insert "#+DESCRIPTION: "))
 
+;;;###autoload
 (defun org-blog-find-unfinished-posts ()
   "Open `org-blog-unfinished-directory'."
   (interactive)
