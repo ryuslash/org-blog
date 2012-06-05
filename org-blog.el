@@ -87,10 +87,9 @@
 ;; 	    :publishing-directory "/protocol:user@host:~/html/blog/"
 ;; 	    :publishing-function org-publish-org-to-blog
 ;;      :blog-url "http://dto.freeshell.org/blog/"
-;;	    :blog-title "dto.freeshell.org blog"
+;;	    :blog-title "Title of my Blog"
 ;;	    :blog-description "David O'Toole's web log."
 ;;	    :blog-export-rss t
-;; 	    :index-title "Title of my Blog"
 ;; 	    :index-posts 2
 ;;      :preamble my-blogroll-html
 ;;      :postamble my-footer-html)
@@ -193,7 +192,6 @@ of org-publish-project-alist."
          (index-file (concat base-directory "index.org"))
          (index-buffer (find-buffer-visiting index-file))
          (num-posts (or (plist-get ext-plist :index-posts) 5))
-         (index-title (plist-get ext-plist :index-title))
          (count 0)
          (p nil))
 
@@ -284,10 +282,9 @@ of org-publish-project-alist."
       (while (search-forward "#+TITLE: " nil t)
         (replace-match "** " nil t))
       ;;
-      ;; insert index title, if any
-      (when index-title
-        (goto-char (point-min))
-        (insert (concat "#+TITLE: " index-title "\n\n")))
+      ;; insert blog title
+      (goto-char (point-min))
+      (insert (concat "#+TITLE: " blog-title "\n\n"))
       (write-file index-file)
       (kill-buffer (current-buffer)))))
 
