@@ -3,8 +3,8 @@
 ;; Copyright (C) 2006  David O'Toole
 ;;               2012  Tom Willemsen
 ;;
-;; Maintainer: Tom Willemsen <tom@ryuslash.org>
-;; Author: David O'Toole <dto@gnu.org>
+;; Author: Tom Willemsen <tom@ryuslash.org>
+;; Original Author: David O'Toole <dto@gnu.org>
 ;; Keywords: hypermedia, tools
 ;; Version: 1.18.1.1
 ;; URL: https://github.com/ryuslash/org-blog
@@ -27,13 +27,7 @@
 ;;; Commentary:
 ;;
 ;; This program adds simple blog publishing support to org-mode. It is
-;; built on top of org-publish.el.
-;;
-;; You should read the documentation for org-publish.el before
-;; continuing.
-;;
-;; The latest version of this program, can be found at:
-;; https://github.com/ryuslash/org-blog
+;; built as a publishing function for org.
 
 ;;; Usage:
 
@@ -80,7 +74,7 @@
 ;;;; 4. Configure blog publishing
 ;;
 ;;    Org-blog contains a publish function to publish a front page for
-;;    your blog. This index can be configured to display the most
+;;    your blog. This front page can be configured to display the most
 ;;    recent posts, and your "blogroll" or list of links to other
 ;;    blogs. The newest post will always be at the top.
 ;;
