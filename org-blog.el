@@ -285,6 +285,7 @@ of org-publish-project-alist."
       ;; insert blog title
       (goto-char (point-min))
       (insert (concat "#+TITLE: " blog-title "\n\n"))
+
       (write-file index-file)
       (kill-buffer (current-buffer)))))
 
