@@ -159,10 +159,13 @@ Post is stored in `org-blog-unfinished-directory'."
     (find-file dir)))
 
 (defun org-blog-finish-post ()
-  "Complete and timestamp the unfinished post in the current buffer.
-Follow up with org-publish-all to upload to the site."
+  "Complete and timestamp the unfinished post in the current
+buffer and delete the old draft file.  Follow up with
+org-publish-all to upload to the site."
   (interactive)
-  (write-file (org-blog-new-post-file)))
+  (let ((old-filename (buffer-file-name)))
+    (write-file (org-blog-new-post-file))
+    (delete-file old-filename t)))
 
 (defun org-publish-org-to-blog (project-plist filename pub-dir)
   (org-publish-with-aux-preprocess-maybe
