@@ -147,8 +147,7 @@ Post is stored in `org-blog-unfinished-directory'."
   (find-file (concat
               (file-name-as-directory org-blog-unfinished-directory)
               filename ".org"))
-  (insert "#+TITLE: \n")
-  (insert "#+DESCRIPTION: "))
+  (insert "#+TITLE: "))
 
 ;;;###autoload
 (defun org-blog-find-unfinished-posts ()
@@ -210,8 +209,7 @@ of org-publish-project-alist."
               (post-title nil)
               (post-time (format-time-string
                           "%a, %d %b %Y %H:%M:00 %z"
-                          (nth 5 (file-attributes p))))
-              (post-description nil))
+                          (nth 5 (file-attributes p)))))
           ;;
           ;; grab post details
           (with-temp-buffer
@@ -223,8 +221,6 @@ of org-publish-project-alist."
             (goto-char (point-min))
             (re-search-forward "#\\+TITLE: \\(.*\\)$" nil t)
             (setf post-title (match-string 1))
-            (re-search-forward "#\\+DESCRIPTION: \\(.*\\)$" nil t)
-            (setf post-description (match-string 1))
             (setf post-content (buffer-substring-no-properties
                                 (match-end 1) (point-max))))
           ;;
